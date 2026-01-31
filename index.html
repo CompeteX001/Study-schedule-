@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CBSE Class 10 Study Reminder">
+    <meta name="theme-color" content="#6366f1">
+    <title>Study Reminder</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.95em;
+            opacity: 0.95;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 1.4em;
+            margin-bottom: 12px;
+            color: #1f2937;
+        }
+
+        p {
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 8px;
+        }
+
+        button:active {
+            opacity: 0.9;
+        }
+
+        button.secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+
+        .stat-num {
+            font-size: 2em;
+            font-weight: 700;
+            color: #6366f1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .days {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .day-btn {
+            padding: 10px 16px;
+            background: white;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .day-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+
+        .schedule {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .session {
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border-left: 4px solid #e5e7eb;
+        }
+
+        .session.current {
+            background: #fef3c7;
+            border-left-color: #f59e0b;
+        }
+
+        .session.completed {
+            opacity: 0.6;
+        }
+
+        .time {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 6px;
+        }
+
+        .subject {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .math { background: #fee2e2; color: #991b1b; }
+        .science { background: #dbeafe; color: #1e40af; }
+        .english { background: #fef3c7; color: #92400e; }
+        .social { background: #ede9fe; color: #5b21b6; }
+        .hindi { background: #ffedd5; color: #9a3412; }
+        .revision { background: #d1fae5; color: #065f46; }
+
+        .task {
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 25px;
+            font-size: 0.9em;
+        }
+
+        @media (min-width: 640px) {
+            .stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Study Reminder</h1>
+            <p class="subtitle">CBSE Class 10 • 10-Day Plan</p>
+        </header>
+
+        <div id="notifCard" class="card center">
+            <div class="icon">🔔</div>
+            <h2>Enable Notifications</h2>
+            <p>Get reminded 5 minutes before each study session</p>
+            <button onclick="enableNotifs()">Enable Notifications</button>
+            <button class="secondary" onclick="skip()">Skip</button>
+        </div>
+
+        <div id="app" class="hidden">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-num" id="day">1</div>
+                    <div class="stat-label">Day</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="done">0</div>
+                    <div class="stat-label">Done</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="todo">7</div>
+                    <div class="stat-label">Todo</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="next">--:--</div>
+                    <div class="stat-label">Next</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 15px;">Select Day</h2>
+                <div class="days" id="days"></div>
+            </div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 15px;">Today's Schedule</h2>
+                <div class="schedule" id="schedule"></div>
+            </div>
+        </div>
+
+        <footer>
+            💪 Stay Focused • Stay Consistent
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+            1: [
+                {t:"06:00",s:"math",d:"Real Numbers + Polynomials (formulas + 10 Qs)"},
+                {t:"08:00",s:"science",d:"Chemical Reactions + Acids/Bases"},
+                {t:"10:00",s:"english",d:"First Flight Ch 1-2"},
+                {t:"12:00",s:"social",d:"History: Nationalism in Europe"},
+                {t:"14:00",s:"hindi",d:"Sparsh Ch 1-2"},
+                {t:"16:00",s:"math",d:"Practice 20 questions"},
+                {t:"18:00",s:"revision",d:"Formula sheet + notes"}
+            ],
+            2: [
+                {t:"06:00",s:"math",d:"Linear + Quadratic Equations"},
+                {t:"08:00",s:"science",d:"Metals + Carbon Compounds"},
+                {t:"10:00",s:"english",d:"First Flight Ch 3-4"},
+                {t:"12:00",s:"social",d:"Nationalism in India"},
+                {t:"14:00",s:"hindi",d:"Sparsh Ch 3-4"},
+                {t:"16:00",s:"science",d:"25 MCQs"},
+                {t:"18:00",s:"math",d:"Previous year questions"}
+            ],
+            3: [
+                {t:"06:00",s:"math",d:"Triangles + Circles"},
+                {t:"08:00",s:"science",d:"Life Processes"},
+                {t:"10:00",s:"english",d:"Footprints Ch 1-3"},
+                {t:"12:00",s:"social",d:"Resources + Forest"},
+                {t:"14:00",s:"hindi",d:"Sanchayan Ch 1-2"},
+                {t:"16:00",s:"math",d:"Coordinate Geometry"},
+                {t:"18:00",s:"science",d:"Diagram practice"}
+            ],
+            4: [
+                {t:"06:00",s:"math",d:"Trigonometry identities"},
+                {t:"08:00",s:"science",d:"Control + Reproduction"},
+                {t:"10:00",s:"english",d:"Remaining chapters"},
+                {t:"12:00",s:"social",d:"Water + Agriculture"},
+                {t:"14:00",s:"hindi",d:"Grammar practice"},
+                {t:"16:00",s:"science",d:"30 MCQs biology"},
+                {t:"18:00",s:"math",d:"Heights + Distances"}
+            ],
+            5: [
+                {t:"06:00",s:"math",d:"Surface Areas + Volumes"},
+                {t:"08:00",s:"science",d:"Heredity + Evolution"},
+                {t:"10:00",s:"english",d:"Letter + Article writing"},
+                {t:"12:00",s:"social",d:"Minerals + Energy"},
+                {t:"14:00",s:"hindi",d:"Letter writing"},
+                {t:"16:00",s:"math",d:"Statistics"},
+                {t:"18:00",s:"revision",d:"Science diagrams"}
+            ],
+            6: [
+                {t:"06:00",s:"math",d:"Probability"},
+                {t:"08:00",s:"science",d:"Light + Reflection"},
+                {t:"10:00",s:"english",d:"Grammar revision"},
+                {t:"12:00",s:"social",d:"Power Sharing + Federalism"},
+                {t:"14:00",s:"hindi",d:"Comprehension"},
+                {t:"16:00",s:"science",d:"Human Eye"},
+                {t:"18:00",s:"math",d:"Practice test"}
+            ],
+            7: [
+                {t:"06:00",s:"math",d:"Weak topics"},
+                {t:"08:00",s:"science",d:"Electricity"},
+                {t:"10:00",s:"english",d:"Comprehension"},
+                {t:"12:00",s:"social",d:"Democracy + Diversity"},
+                {t:"14:00",s:"hindi",d:"Poetry"},
+                {t:"16:00",s:"science",d:"Magnetic Effects"},
+                {t:"18:00",s:"social",d:"Map work"}
+            ],
+            8: [
+                {t:"06:00",s:"math",d:"Previous Year Paper"},
+                {t:"10:00",s:"science",d:"Energy + Environment"},
+                {t:"12:00",s:"social",d:"Political Parties"},
+                {t:"14:00",s:"english",d:"Previous Year Paper"},
+                {t:"16:00",s:"science",d:"Chapter revision"},
+                {t:"18:00",s:"hindi",d:"Previous year Qs"}
+            ],
+            9: [
+                {t:"06:00",s:"social",d:"Economics all chapters"},
+                {t:"08:00",s:"science",d:"Previous Year Paper"},
+                {t:"11:00",s:"english",d:"Literature revision"},
+                {t:"13:00",s:"math",d:"Error analysis"},
+                {t:"15:00",s:"social",d:"Previous Year Paper"},
+                {t:"17:00",s:"hindi",d:"Full revision"},
+                {t:"19:00",s:"revision",d:"Formulas + facts"}
+            ],
+            10: [
+                {t:"06:00",s:"math",d:"All formulas"},
+                {t:"07:30",s:"science",d:"All equations"},
+                {t:"09:00",s:"english",d:"Chapter summaries"},
+                {t:"10:30",s:"social",d:"Dates + maps"},
+                {t:"12:00",s:"hindi",d:"Grammar rules"},
+                {t:"14:00",s:"revision",d:"Mock Test"},
+                {t:"16:30",s:"revision",d:"Weak topics"},
+                {t:"18:30",s:"revision",d:"Light revision"}
+            ]
+        };
+
+        const emoji = {math:"📐",science:"🔬",english:"📖",social:"🌍",hindi:"✍️",revision:"♻️"};
+        let day = 1;
+        let notifs = false;
+
+        function enableNotifs() {
+            if (!('Notification' in window)) {
+                alert('Notifications not supported');
+                show();
+                return;
+            }
+            Notification.requestPermission().then(p => {
+                if (p === 'granted') {
+                    notifs = true;
+                    alert('Notifications enabled!');
+                }
+                show();
+            });
+        }
+
+        function skip() {
+            show();
+        }
+
+        function show() {
+            document.getElementById('notifCard').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            makeDays();
+            load(1);
+            setInterval(update, 30000);
+        }
+
+        function makeDays() {
+            const c = document.getElementById('days');
+            for (let i = 1; i <= 10; i++) {
+                const b = document.createElement('button');
+                b.className = 'day-btn';
+                b.textContent = 'Day ' + i;
+                b.onclick = () => {
+                    day = i;
+                    load(i);
+                    document.querySelectorAll('.day-btn').forEach((x,j) => {
+                        x.classList.toggle('active', j === i-1);
+                    });
+                };
+                c.appendChild(b);
+            }
+            c.children[0].classList.add('active');
+        }
+
+        function load(d) {
+            const now = new Date();
+            const m = now.getHours() * 60 + now.getMinutes();
+            const sessions = data[d];
+            const c = document.getElementById('schedule');
+            c.innerHTML = '';
+            
+            let done = 0, todo = 0;
+            
+            sessions.forEach(s => {
+                const [h, min] = s.t.split(':').map(Number);
+                const sm = h * 60 + min;
+                const status = sm < m ? 'completed' : (sm <= m + 90 ? 'current' : '');
+                if (sm < m) done++; else todo++;
+                
+                const div = document.createElement('div');
+                div.className = 'session ' + status;
+                div.innerHTML = `
+                    <div class="time">${emoji[s.s]} ${s.t}</div>
+                    <div class="subject ${s.s}">${s.s.toUpperCase()}</div>
+                    <div class="task">${s.d}</div>
+                `;
+                c.appendChild(div);
+            });
+            
+            document.getElementById('day').textContent = d;
+            document.getElementById('done').textContent = done;
+            document.getElementById('todo').textContent = todo;
+            
+            if (notifs) schedNotifs(d);
+        }
+
+        function update() {
+            load(day);
+            const now = new Date();
+            const m = now.getHours() * 60 + now.getMinutes();
+            const sessions = data[day];
+            let next = null;
+            
+            for (let s of sessions) {
+                const [h, min] = s.t.split(':').map(Number);
+                const sm = h * 60 + min;
+                if (sm > m) {
+                    next = sm - m;
+                    break;
+                }
+            }
+            
+            const el = document.getElementById('next');
+            if (next) {
+                const h = Math.floor(next / 60);
+                const min = next % 60;
+                el.textContent = (h < 10 ? '0' : '') + h + ':' + (min < 10 ? '0' : '') + min;
+            } else {
+                el.textContent = 'Done';
+            }
+        }
+
+        function schedNotifs(d) {
+            const now = new Date();
+            const sessions = data[d];
+            
+            sessions.forEach(s => {
+                const [h, m] = s.t.split(':').map(Number);
+                const t = new Date();
+                t.setHours(h, m - 5, 0, 0);
+                const diff = t - now;
+                
+                if (diff > 0 && diff < 86400000) {
+                    setTimeout(() => {
+                        if (Notification.permission === 'granted') {
+                            new Notification(
+                                emoji[s.s] + ' ' + s.s.toUpperCase() + ' in 5 min!',
+                                {body: s.d}
+                            );
+                        }
+                    }, diff);
+                }
+            });
+        }
+
+        // Auto start if already permitted
+        if (Notification.permission === 'granted') {
+            notifs = true;
+            show();
+        }
+    </script>
+</body>
+</html>
