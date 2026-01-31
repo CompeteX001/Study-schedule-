@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CBSE Class 10 Study Reminder - 10 Day Revision Plan">
+    <meta name="theme-color" content="#6366f1">
+    <title>Study Reminder | CBSE Class 10</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #fafafa;
+            --card: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        /* Notification Permission */
+        .notification-prompt {
+            text-align: center;
+        }
+
+        .notification-icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .notification-prompt h2 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .notification-prompt p {
+            color: var(--text-light);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin: 6px;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        button.secondary:hover {
+            background: var(--bg);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Day Navigation */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .day-nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .day-btn {
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .day-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Timeline */
+        .timeline {
+            max-height: 580px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .timeline::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .timeline::-webkit-scrollbar-track {
+            background: var(--bg);
+            border-radius: 10px;
+        }
+
+        .timeline::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .timeline::-webkit-scrollbar-thumb:hover {
+            background: var(--text-light);
+        }
+
+        .session {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: var(--bg);
+            border-radius: 10px;
+            border-left: 3px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .session:hover {
+            background: var(--card);
+            box-shadow: var(--shadow);
+            transform: translateX(4px);
+        }
+
+        .session.current {
+            background: #fef3c7;
+            border-left-color: var(--warning);
+        }
+
+        .session.completed {
+            opacity: 0.6;
+        }
+
+        .session-time {
+            font-weight: 600;
+            color: var(--text);
+            min-width: 70px;
+            font-size: 0.95rem;
+        }
+
+        .session-content {
+            flex: 1;
+        }
+
+        .session-subject {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: var(--card);
+        }
+
+        .session.math .session-subject { color: #ef4444; background: #fee2e2; }
+        .session.science .session-subject { color: #3b82f6; background: #dbeafe; }
+        .session.english .session-subject { color: #f59e0b; background: #fef3c7; }
+        .session.social .session-subject { color: #8b5cf6; background: #ede9fe; }
+        .session.hindi .session-subject { color: #f97316; background: #ffedd5; }
+        .session.revision .session-subject { color: #10b981; background: #d1fae5; }
+
+        .session-task {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.current {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge.upcoming {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card);
+            padding: 16px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            max-width: 320px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .toast-message {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Install PWA Banner */
+        .install-banner {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .install-banner button {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            h1 { font-size: 1.75rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .session { flex-direction: column; gap: 8px; }
+            .session-time { min-width: auto; }
+            .toast { right: 10px; left: 10px; max-width: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>📚 Study Reminder</h1>
+            <p class="subtitle">CBSE Class 10 • 10-Day Revision Plan</p>
+        </header>
+
+        <!-- Install PWA Banner -->
+        <div id="installBanner" class="install-banner hidden">
+            <div>
+                <strong>Install App</strong>
+                <p style="font-size: 0.9rem; margin-top: 4px; opacity: 0.9;">Get notifications even when browser is closed</p>
+            </div>
+            <button id="installBtn">Install</button>
+        </div>
+
+        <!-- Notification Permission Card -->
+        <div id="notificationCard" class="card notification-prompt">
+            <div class="notification-icon">🔔</div>
+            <h2>Enable Study Reminders</h2>
+            <p>Get notified 5 minutes before each study session starts.<br>Never miss a topic!</p>
+            <button id="enableNotifications">Enable Notifications</button>
+            <button class="secondary" id="skipNotifications">Maybe Later</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="hidden">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="currentDay">1</div>
+                    <div class="stat-label">Current Day</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedCount">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="upcomingCount">7</div>
+                    <div class="stat-label">Upcoming</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="nextSession">--:--</div>
+                    <div class="stat-label">Next In</div>
+                </div>
+            </div>
+
+            <!-- Day Selector -->
+            <div class="card">
+                <div class="section-title">Select Day</div>
+                <div class="day-nav" id="dayNav"></div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="card">
+                <div class="section-title">Today's Schedule</div>
+                <div class="timeline" id="timeline"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>💪 Stay Focused • Stay Consistent • Achieve Excellence</p>
+            <p style="margin-top: 8px; opacity: 0.7;">Made for CBSE Students</p>
+        </footer>
+    </div>
+
+    <script>
+        // Study Schedule - All 10 Days
+        const SCHEDULE = {
+            1: [
+                { time: "06:00", subject: "math", task: "Real Numbers + Polynomials (formulas + 10 Qs)" },
+                { time: "08:00", subject: "science", task: "Chemical Reactions + Acids/Bases (equations + MCQs)" },
+                { time: "10:00", subject: "english", task: "First Flight Ch 1-2 (summary + character sketch)" },
+                { time: "12:00", subject: "social", task: "History: Nationalism in Europe (timeline + key points)" },
+                { time: "14:00", subject: "hindi", task: "Sparsh Ch 1-2 (summary + word meanings)" },
+                { time: "16:00", subject: "math", task: "Practice 20 mixed questions from Day's topics" },
+                { time: "18:00", subject: "revision", task: "Formula sheet + Quick notes of the day" }
+            ],
+            2: [
+                { time: "06:00", subject: "math", task: "Linear + Quadratic Equations (solve 15 Qs)" },
+                { time: "08:00", subject: "science", task: "Metals & Non-metals + Carbon Compounds (properties)" },
+                { time: "10:00", subject: "english", task: "First Flight Ch 3-4 + 1 poem (annotations)" },
+                { time: "12:00", subject: "social", task: "History: Nationalism in India (movements + leaders)" },
+                { time: "14:00", subject: "hindi", task: "Sparsh Ch 3-4 (comprehension questions)" },
+                { time: "16:00", subject: "science", task: "Practice 25 MCQs from chemical chapters" },
+                { time: "18:00", subject: "math", task: "Previous year questions (algebra section)" }
+            ],
+            3: [
+                { time: "06:00", subject: "math", task: "Triangles + Circles (theorems + 12 proofs)" },
+                { time: "08:00", subject: "science", task: "Life Processes (nutrition, respiration, transport, excretion)" },
+                { time: "10:00", subject: "english", task: "Footprints Ch 1-3 (summaries + values)" },
+                { time: "12:00", subject: "social", task: "Geography: Resources & Development + Forest Resources" },
+                { time: "14:00", subject: "hindi", task: "Sanchayan Ch 1-2 (Q&A practice)" },
+                { time: "16:00", subject: "math", task: "Coordinate Geometry (15 Qs on distance, section formula)" },
+                { time: "18:00", subject: "science", task: "Diagram practice (heart, kidney, stomata)" }
+            ],
+            4: [
+                { time: "06:00", subject: "math", task: "Trigonometry (all identities + 20 Qs)" },
+                { time: "08:00", subject: "science", task: "Control & Coordination + Reproduction (nervous system)" },
+                { time: "10:00", subject: "english", task: "Remaining First Flight chapters + poems" },
+                { time: "12:00", subject: "social", task: "Geography: Water + Agriculture (map work practice)" },
+                { time: "14:00", subject: "hindi", task: "Grammar (काल, वाच्य, समास - 20 Qs)" },
+                { time: "16:00", subject: "science", task: "30 MCQs from biology chapters" },
+                { time: "18:00", subject: "math", task: "Heights & Distances (10 word problems)" }
+            ],
+            5: [
+                { time: "06:00", subject: "math", task: "Surface Areas & Volumes (formulas + 15 Qs)" },
+                { time: "08:00", subject: "science", task: "Heredity & Evolution (Mendel's laws, speciation)" },
+                { time: "10:00", subject: "english", task: "Letter + Article writing (5 formats practice)" },
+                { time: "12:00", subject: "social", task: "Geography: Minerals, Energy, Manufacturing (map work)" },
+                { time: "14:00", subject: "hindi", task: "Letter + Notice writing practice" },
+                { time: "16:00", subject: "math", task: "Statistics (mean, median, mode - 12 Qs)" },
+                { time: "18:00", subject: "revision", task: "All science diagrams + equations review" }
+            ],
+            6: [
+                { time: "06:00", subject: "math", task: "Probability (15 Qs - cards, dice, balls)" },
+                { time: "08:00", subject: "science", task: "Light (reflection, refraction, lenses - ray diagrams)" },
+                { time: "10:00", subject: "english", task: "Footprints remaining + Grammar (tenses, voice, reported)" },
+                { time: "12:00", subject: "social", task: "Civics: Power Sharing + Federalism" },
+                { time: "14:00", subject: "hindi", task: "Comprehension passages (3 unseen passages)" },
+                { time: "16:00", subject: "science", task: "Human Eye + Numerical on lenses (15 Qs)" },
+                { time: "18:00", subject: "math", task: "Mixed practice test (40 Qs - 1.5 hours)" }
+            ],
+            7: [
+                { time: "06:00", subject: "math", task: "Weak topics revision + formula consolidation" },
+                { time: "08:00", subject: "science", task: "Electricity (Ohm's law, series/parallel - 20 numericals)" },
+                { time: "10:00", subject: "english", task: "Comprehension practice (3 passages + note-making)" },
+                { time: "12:00", subject: "social", task: "Civics: Democracy & Diversity + Gender/Religion/Caste" },
+                { time: "14:00", subject: "hindi", task: "Unseen poem + literary devices" },
+                { time: "16:00", subject: "science", task: "Magnetic Effects (Fleming's rules, motor, generator)" },
+                { time: "18:00", subject: "social", task: "Map work practice (25 locations)" }
+            ],
+            8: [
+                { time: "06:00", subject: "math", task: "Previous Year Paper (Full - timed 3 hours)" },
+                { time: "10:00", subject: "science", task: "Energy Sources + Environment + Management" },
+                { time: "12:00", subject: "social", task: "Civics: Political Parties + Outcomes of Democracy" },
+                { time: "14:00", subject: "english", task: "Previous Year Paper (Reading + Writing sections)" },
+                { time: "16:00", subject: "science", task: "Full chapter revision (make one-page notes)" },
+                { time: "18:00", subject: "hindi", task: "Previous year questions practice" }
+            ],
+            9: [
+                { time: "06:00", subject: "social", task: "Economics: All 5 chapters (flowcharts + key terms)" },
+                { time: "08:00", subject: "science", task: "Previous Year Paper (Full paper - timed)" },
+                { time: "11:00", subject: "english", task: "Literature revision (all chapters summary in points)" },
+                { time: "13:00", subject: "math", task: "Error analysis from Day 8 paper + weak area practice" },
+                { time: "15:00", subject: "social", task: "Previous Year Paper (timed)" },
+                { time: "17:00", subject: "hindi", task: "Full syllabus quick revision" },
+                { time: "19:00", subject: "revision", task: "Formula sheets + important dates/facts" }
+            ],
+            10: [
+                { time: "06:00", subject: "math", task: "All formulas rapid fire" },
+                { time: "07:30", subject: "science", task: "All equations + diagrams (label practice)" },
+                { time: "09:00", subject: "english", task: "Chapter summaries + word meanings rapid revision" },
+                { time: "10:30", subject: "social", task: "Dates, maps, important terms" },
+                { time: "12:00", subject: "hindi", task: "Grammar rules + chapter summaries" },
+                { time: "14:00", subject: "revision", task: "Mock Test - Any one subject (full paper under exam conditions)" },
+                { time: "16:30", subject: "revision", task: "Weak Topics - Focus only on marked difficult areas" },
+                { time: "18:30", subject: "revision", task: "Relaxation - Light revision, confidence building, early sleep" }
+            ]
+        };
+
+        const SUBJECT_EMOJI = {
+            math: "📐",
+            science: "🔬",
+            english: "📖",
+            social: "🌍",
+            hindi: "✍️",
+            revision: "♻️"
+        };
+
+        // State
+        let currentDay = 1;
+        let notificationsEnabled = false;
+        let notificationTimers = [];
+        let deferredPrompt;
+
+        // DOM Elements
+        const notificationCard = document.getElementById('notificationCard');
+        const dashboard = document.getElementById('dashboard');
+        const enableBtn = document.getElementById('enableNotifications');
+        const skipBtn = document.getElementById('skipNotifications');
+        const timeline = document.getElementById('timeline');
+        const dayNav = document.getElementById('dayNav');
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+
+        // Initialize
+        init();
+
+        function init() {
+            // Check if already granted
+            if (Notification.permission === 'granted') {
+                notificationsEnabled = true;
+                showDashboard();
+            }
+
+            // PWA Install prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBanner.classList.remove('hidden');
+            });
+
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        showToast('App Installed!', 'You can now use it offline', 'success');
+                    }
+                    deferredPrompt = null;
+                    installBanner.classList.add('hidden');
+                }
+            });
+
+            // Event listeners
+            enableBtn.addEventListener('click', requestNotificationPermission);
+            skipBtn.addEventListener('click', showDashboard);
+
+            // Service Worker registration
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            }
+        }
+
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                showToast('Not Supported', 'Your browser does not support notifications', 'error');
+                showDashboard();
+                return;
+            }
+
+            const permission = await Notification.requestPermission();
+            
+            if (permission === 'granted') {
+                notificationsEnabled = true;
+                showToast('Success!', 'Notifications enabled successfully', 'success');
+                showDashboard();
+            } else if (permission === 'denied') {
+                showToast('Permission Denied', 'You can enable it from browser settings', 'error');
+                showDashboard();
+            } else {
+                showDashboard();
+            }
+        }
+
+        function showDashboard() {
+            notificationCard.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+            createDayNavigation();
+            loadDay(currentDay);
+            startTimers();
+            scheduleNotifications();
+        }
+
+        function createDayNavigation() {
+            dayNav.innerHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'day-btn';
+                btn.textContent = `Day ${i}`;
+                btn.addEventListener('click', () => {
+                    currentDay = i;
+                    loadDay(i);
+                    updateDayButtons();
+                    scheduleNotifications();
+                });
+                dayNav.appendChild(btn);
+            }
+            updateDayButtons();
+        }
+
+        function updateDayButtons() {
+            const buttons = dayNav.querySelectorAll('.day-btn');
+            buttons.forEach((btn, index) => {
+                btn.classList.toggle('active', index + 1 === currentDay);
+            });
+        }
+
+        function loadDay(day) {
+            timeline.innerHTML = '';
+            const sessions = SCHEDULE[day];
+            const now = new Date();
+            const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+            let completed = 0;
+            let upcoming = 0;
+
+            sessions.forEach(session => {
+                const [hours, minutes] = session.time.split(':').map(Number);
+                const sessionMinutes = hours * 60 + minutes;
+                
+                let status = 'upcoming';
+                if (sessionMinutes < nowMinutes) {
+                    status = 'completed';
+                    completed++;
+                } else if (sessionMinutes <= nowMinutes + 90) {
+                    status = 'current';
+                    upcoming++;
+                } else {
+                    upcoming++;
+                }
+
+                const sessionEl = document.createElement('div');
+                sessionEl.className = `session ${session.subject} ${status}`;
+                sessionEl.innerHTML = `
+                    <div class="session-time">${session.time}</div>
+                    <div class="session-content">
+                        <div class="session-subject">
+                            ${SUBJECT_EMOJI[session.subject]} ${session.subject.toUpperCase()}
+                        </div>
+                        <div class="session-task">${session.task}</div>
+                        <div class="status-badge ${status}">${status}</div>
+                    </div>
+                `;
+                timeline.appendChild(sessionEl);
+            });
+
+            // Update stats
+            document.getElementById('currentDay').textContent = day;
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('upcomingCount').textContent = upcoming;
+        }
+
+        function startTimers() {
+            updateNextSessionTimer();
+            setInterval(updateNextSessionTimer, 30000); // Update every 30 seconds
+        }
+
+        function updateNextSessionTimer() {
+            const now = new Date();
+            const nowMinutes = now.getHours() * 60 + now.getMinutes();
+            const sessions = SCHEDULE[currentDay];
+            
+            let nextSessionMinutes = null;
+            for (const session of sessions) {
+                const [hours, minutes] = session.time.split(':').map(Number);
+                const sessionMinutes = hours * 60 + minutes;
+                
+                if (sessionMinutes > nowMinutes) {
+                    nextSessionMinutes = sessionMinutes;
+                    break;
+                }
+            }
+
+            const timerEl = document.getElementById('nextSession');
+            if (nextSessionMinutes) {
+                const diff = nextSessionMinutes - nowMinutes;
+                const hours = Math.floor(diff / 60);
+                const mins = diff % 60;
+                timerEl.textContent = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+            } else {
+                timerEl.textContent = 'Done!';
+            }
+
+            // Reload timeline to update statuses
+            loadDay(currentDay);
+        }
+
+        function scheduleNotifications() {
+            if (!notificationsEnabled || Notification.permission !== 'granted') return;
+
+            // Clear existing timers
+            notificationTimers.forEach(timer => clearTimeout(timer));
+            notificationTimers = [];
+
+            const now = new Date();
+            const sessions = SCHEDULE[currentDay];
+
+            sessions.forEach(session => {
+                const [hours, minutes] = session.time.split(':').map(Number);
+                const sessionDate = new Date();
+                sessionDate.setHours(hours, minutes - 5, 0, 0); // 5 minutes before
+
+                const timeUntil = sessionDate - now;
+
+                // Schedule if within next 24 hours and in future
+                if (timeUntil > 0 && timeUntil < 24 * 60 * 60 * 1000) {
+                    const timer = setTimeout(() => {
+                        sendNotification(session);
+                    }, timeUntil);
+                    
+                    notificationTimers.push(timer);
+                }
+            });
+
+            console.log(`Scheduled ${notificationTimers.length} notifications for Day ${currentDay}`);
+        }
+
+        function sendNotification(session) {
+            if (Notification.permission === 'granted') {
+                const notification = new Notification(
+                    `${SUBJECT_EMOJI[session.subject]} ${session.subject.toUpperCase()} - Starting in 5 min!`,
+                    {
+                        body: session.task,
+                        icon: 'icon-192.png',
+                        badge: 'icon-192.png',
+                        tag: `session-${session.time}`,
+                        requireInteraction: false,
+                        vibrate: [200, 100, 200]
+                    }
+                );
+
+                notification.onclick = () => {
+                    window.focus();
+                    notification.close();
+                };
+
+                // Auto close after 10 seconds
+                setTimeout(() => notification.close(), 10000);
+            }
+        }
+
+        function showToast(title, message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Test notification function (for debugging)
+        window.testNotification = function() {
+            if (notificationsEnabled) {
+                sendNotification({
+                    subject: 'math',
+                    task: 'This is a test notification! 📚'
+                });
+                showToast('Test Sent!', 'Check your notifications', 'success');
+            } else {
+                showToast('Enable First', 'Please enable notifications first', 'error');
+            }
+        };
+    </script>
+</body>
+</html>
