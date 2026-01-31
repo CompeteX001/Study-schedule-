@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="CBSE Class 10 Study Reminder">
     <meta name="theme-color" content="#6366f1">
-    <title>Study Reminder</title>
+    <title>Study Reminder Pro</title>
     <link rel="manifest" href="manifest.json">
     <style>
         * {
@@ -14,22 +14,56 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #6366f1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #fafafa;
+            --card: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        /* Theme Colors */
+        body.theme-purple { --primary: #8b5cf6; }
+        body.theme-blue { --primary: #3b82f6; }
+        body.theme-green { --primary: #10b981; }
+        body.theme-pink { --primary: #ec4899; }
+        body.theme-orange { --primary: #f97316; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 15px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
         header {
             text-align: center;
             color: white;
-            padding: 25px 15px;
+            padding: 20px 15px;
+            position: relative;
+        }
+
+        .settings-btn {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3em;
         }
 
         h1 {
@@ -43,7 +77,7 @@
         }
 
         .card {
-            background: white;
+            background: var(--card);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 20px;
@@ -62,17 +96,17 @@
         h2 {
             font-size: 1.4em;
             margin-bottom: 12px;
-            color: #1f2937;
+            color: var(--text);
         }
 
         p {
-            color: #6b7280;
+            color: var(--text-light);
             margin-bottom: 20px;
             line-height: 1.6;
         }
 
         button {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary), #764ba2);
             color: white;
             border: none;
             padding: 14px 35px;
@@ -81,49 +115,102 @@
             cursor: pointer;
             font-weight: 600;
             margin: 8px;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
         }
 
         button:active {
-            opacity: 0.9;
+            transform: translateY(0);
         }
 
         button.secondary {
             background: #f3f4f6;
-            color: #374151;
+            color: var(--text);
+        }
+
+        button.small {
+            padding: 8px 16px;
+            font-size: 0.9em;
         }
 
         .hidden {
             display: none;
         }
 
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.9);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary), #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Stats Grid */
         .stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
         }
 
         .stat {
-            background: white;
+            background: var(--card);
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px;
             text-align: center;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border);
         }
 
         .stat-num {
             font-size: 2em;
             font-weight: 700;
-            color: #6366f1;
+            color: var(--primary);
             margin-bottom: 5px;
         }
 
         .stat-label {
-            font-size: 0.85em;
-            color: #6b7280;
+            font-size: 0.8em;
+            color: var(--text-light);
             text-transform: uppercase;
         }
 
+        /* Progress Bar */
+        .progress-bar {
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #059669);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* Day Navigation */
         .days {
             display: flex;
             gap: 8px;
@@ -134,44 +221,103 @@
         .day-btn {
             padding: 10px 16px;
             background: white;
-            color: #374151;
-            border: 1px solid #e5e7eb;
+            color: var(--text);
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 0.9em;
+            min-width: 70px;
         }
 
         .day-btn.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary), #764ba2);
             color: white;
             border: none;
         }
 
+        /* Schedule */
         .schedule {
-            max-height: 500px;
+            max-height: 450px;
             overflow-y: auto;
         }
 
         .session {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
             padding: 15px;
             margin-bottom: 12px;
             background: #f9fafb;
             border-radius: 10px;
             border-left: 4px solid #e5e7eb;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .session:hover {
+            background: #f3f4f6;
+            transform: translateX(3px);
         }
 
         .session.current {
             background: #fef3c7;
-            border-left-color: #f59e0b;
+            border-left-color: var(--warning);
         }
 
-        .session.completed {
-            opacity: 0.6;
+        .session.checked {
+            background: #d1fae5;
+            border-left-color: var(--success);
+        }
+
+        .session.checked .content {
+            opacity: 0.7;
+        }
+
+        .session.checked .task {
+            text-decoration: line-through;
+        }
+
+        /* Checkbox */
+        .checkbox-wrapper {
+            position: relative;
+            margin-top: 3px;
+        }
+
+        .checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .checkbox:checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .content {
+            flex: 1;
         }
 
         .time {
             font-weight: 700;
-            color: #1f2937;
+            color: var(--text);
             margin-bottom: 6px;
+            font-size: 0.95em;
         }
 
         .subject {
@@ -191,15 +337,153 @@
         .revision { background: #d1fae5; color: #065f46; }
 
         .task {
-            color: #6b7280;
+            color: var(--text-light);
             font-size: 0.9em;
+            line-height: 1.5;
         }
+
+        /* Action Buttons on Session */
+        .session-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .action-btn {
+            padding: 4px 10px;
+            font-size: 0.8em;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Pomodoro Timer */
+        .pomodoro {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .timer-display {
+            font-size: 4em;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-mode {
+            font-size: 1.1em;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Notes Section */
+        .notes-area {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95em;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .notes-area:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Streak Display */
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* Settings Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .setting-item {
+            margin-bottom: 20px;
+        }
+
+        .setting-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .theme-colors {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .theme-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .theme-color.active {
+            border-color: var(--text);
+            transform: scale(1.1);
+        }
+
+        .theme-purple-btn { background: #8b5cf6; }
+        .theme-blue-btn { background: #3b82f6; }
+        .theme-green-btn { background: #10b981; }
+        .theme-pink-btn { background: #ec4899; }
+        .theme-orange-btn { background: #f97316; }
 
         footer {
             text-align: center;
             color: white;
             padding: 25px;
             font-size: 0.9em;
+            opacity: 0.9;
         }
 
         @media (min-width: 640px) {
@@ -212,10 +496,12 @@
 <body>
     <div class="container">
         <header>
-            <h1>📚 Study Reminder</h1>
+            <button class="settings-btn" onclick="openSettings()">⚙️</button>
+            <h1>📚 Study Reminder Pro</h1>
             <p class="subtitle">CBSE Class 10 • 10-Day Plan</p>
         </header>
 
+        <!-- Notification Permission -->
         <div id="notifCard" class="card center">
             <div class="icon">🔔</div>
             <h2>Enable Notifications</h2>
@@ -224,39 +510,147 @@
             <button class="secondary" onclick="skip()">Skip</button>
         </div>
 
+        <!-- Main App -->
         <div id="app" class="hidden">
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-num" id="day">1</div>
-                    <div class="stat-label">Day</div>
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('schedule')">📅 Schedule</div>
+                <div class="tab" onclick="switchTab('pomodoro')">⏱️ Pomodoro</div>
+                <div class="tab" onclick="switchTab('notes')">📝 Notes</div>
+                <div class="tab" onclick="switchTab('stats')">📊 Stats</div>
+            </div>
+
+            <!-- Schedule Tab -->
+            <div id="scheduleTab">
+                <!-- Streak Badge -->
+                <div class="center">
+                    <div class="streak-badge">
+                        🔥 <span id="streak">0</span> Day Streak!
+                    </div>
                 </div>
-                <div class="stat">
-                    <div class="stat-num" id="done">0</div>
-                    <div class="stat-label">Done</div>
+
+                <!-- Stats -->
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-num" id="day">1</div>
+                        <div class="stat-label">Day</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num" id="completed">0</div>
+                        <div class="stat-label">Done</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num" id="total">7</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num" id="next">--:--</div>
+                        <div class="stat-label">Next</div>
+                    </div>
                 </div>
-                <div class="stat">
-                    <div class="stat-num" id="todo">7</div>
-                    <div class="stat-label">Todo</div>
+
+                <!-- Day Selector -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 style="margin: 0;">Select Day</h2>
+                        <button class="secondary small" onclick="resetDay()">Reset</button>
+                    </div>
+                    <div class="days" id="days"></div>
                 </div>
-                <div class="stat">
-                    <div class="stat-num" id="next">--:--</div>
-                    <div class="stat-label">Next</div>
+
+                <!-- Schedule -->
+                <div class="card">
+                    <h2 style="margin-bottom: 15px;">Today's Schedule</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress"></div>
+                    </div>
+                    <div class="schedule" id="schedule"></div>
                 </div>
             </div>
 
-            <div class="card">
-                <h2 style="margin-bottom: 15px;">Select Day</h2>
-                <div class="days" id="days"></div>
+            <!-- Pomodoro Tab -->
+            <div id="pomodoroTab" class="hidden card">
+                <div class="pomodoro">
+                    <div class="timer-mode" id="timerMode">Work Session</div>
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    <div class="timer-controls">
+                        <button onclick="startPomodoro()">▶️ Start</button>
+                        <button class="secondary" onclick="pausePomodoro()">⏸️ Pause</button>
+                        <button class="secondary" onclick="resetPomodoro()">🔄 Reset</button>
+                    </div>
+                    <p style="margin-top: 20px; color: var(--text-light);">
+                        Work for 25 min, break for 5 min. After 4 sessions, take a 15 min break!
+                    </p>
+                    <div style="margin-top: 20px;">
+                        <strong>Session: <span id="pomodoroCount">1</span>/4</strong>
+                    </div>
+                </div>
             </div>
 
-            <div class="card">
-                <h2 style="margin-bottom: 15px;">Today's Schedule</h2>
-                <div class="schedule" id="schedule"></div>
+            <!-- Notes Tab -->
+            <div id="notesTab" class="hidden card">
+                <h2>Study Notes</h2>
+                <p style="margin-bottom: 15px;">Keep track of important points, formulas, or reminders</p>
+                <textarea id="notesArea" class="notes-area" placeholder="Type your notes here..."></textarea>
+                <button onclick="saveNotes()" style="margin-top: 15px;">💾 Save Notes</button>
+            </div>
+
+            <!-- Stats Tab -->
+            <div id="statsTab" class="hidden card">
+                <h2>Your Progress</h2>
+                <div style="margin-top: 20px;">
+                    <div style="margin-bottom: 20px;">
+                        <strong>Total Study Sessions Completed:</strong>
+                        <div style="font-size: 2em; color: var(--primary); margin-top: 8px;" id="totalCompleted">0</div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <strong>Current Streak:</strong>
+                        <div style="font-size: 2em; color: #f59e0b; margin-top: 8px;">🔥 <span id="streakDisplay">0</span> days</div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <strong>Total Pomodoros:</strong>
+                        <div style="font-size: 2em; color: var(--primary); margin-top: 8px;" id="totalPomodoros">0</div>
+                    </div>
+                    <button class="secondary" onclick="resetAllProgress()" style="margin-top: 20px;">
+                        🔄 Reset All Progress
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal hidden">
+            <div class="modal-content">
+                <h2 style="margin-bottom: 20px;">⚙️ Settings</h2>
+                
+                <div class="setting-item">
+                    <label class="setting-label">Theme Color</label>
+                    <div class="theme-colors">
+                        <div class="theme-color theme-purple-btn" onclick="changeTheme('purple')"></div>
+                        <div class="theme-color theme-blue-btn" onclick="changeTheme('blue')"></div>
+                        <div class="theme-color theme-green-btn" onclick="changeTheme('green')"></div>
+                        <div class="theme-color theme-pink-btn" onclick="changeTheme('pink')"></div>
+                        <div class="theme-color theme-orange-btn" onclick="changeTheme('orange')"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <label class="setting-label">Notification Sound</label>
+                    <button class="secondary" onclick="testNotification()">🔔 Test Notification</button>
+                </div>
+
+                <div class="setting-item">
+                    <label class="setting-label">Data Management</label>
+                    <button class="secondary" onclick="exportData()">📥 Export Data</button>
+                    <button class="secondary" onclick="clearAllData()">🗑️ Clear All Data</button>
+                </div>
+
+                <button onclick="closeSettings()" style="margin-top: 20px; width: 100%;">Close</button>
             </div>
         </div>
 
         <footer>
-            💪 Stay Focused • Stay Consistent
+            💪 Stay Focused • Stay Consistent • Achieve Excellence
         </footer>
     </div>
 
@@ -264,231 +658,4 @@
         const data = {
             1: [
                 {t:"06:00",s:"math",d:"Real Numbers + Polynomials (formulas + 10 Qs)"},
-                {t:"08:00",s:"science",d:"Chemical Reactions + Acids/Bases"},
-                {t:"10:00",s:"english",d:"First Flight Ch 1-2"},
-                {t:"12:00",s:"social",d:"History: Nationalism in Europe"},
-                {t:"14:00",s:"hindi",d:"Sparsh Ch 1-2"},
-                {t:"16:00",s:"math",d:"Practice 20 questions"},
-                {t:"18:00",s:"revision",d:"Formula sheet + notes"}
-            ],
-            2: [
-                {t:"06:00",s:"math",d:"Linear + Quadratic Equations"},
-                {t:"08:00",s:"science",d:"Metals + Carbon Compounds"},
-                {t:"10:00",s:"english",d:"First Flight Ch 3-4"},
-                {t:"12:00",s:"social",d:"Nationalism in India"},
-                {t:"14:00",s:"hindi",d:"Sparsh Ch 3-4"},
-                {t:"16:00",s:"science",d:"25 MCQs"},
-                {t:"18:00",s:"math",d:"Previous year questions"}
-            ],
-            3: [
-                {t:"06:00",s:"math",d:"Triangles + Circles"},
-                {t:"08:00",s:"science",d:"Life Processes"},
-                {t:"10:00",s:"english",d:"Footprints Ch 1-3"},
-                {t:"12:00",s:"social",d:"Resources + Forest"},
-                {t:"14:00",s:"hindi",d:"Sanchayan Ch 1-2"},
-                {t:"16:00",s:"math",d:"Coordinate Geometry"},
-                {t:"18:00",s:"science",d:"Diagram practice"}
-            ],
-            4: [
-                {t:"06:00",s:"math",d:"Trigonometry identities"},
-                {t:"08:00",s:"science",d:"Control + Reproduction"},
-                {t:"10:00",s:"english",d:"Remaining chapters"},
-                {t:"12:00",s:"social",d:"Water + Agriculture"},
-                {t:"14:00",s:"hindi",d:"Grammar practice"},
-                {t:"16:00",s:"science",d:"30 MCQs biology"},
-                {t:"18:00",s:"math",d:"Heights + Distances"}
-            ],
-            5: [
-                {t:"06:00",s:"math",d:"Surface Areas + Volumes"},
-                {t:"08:00",s:"science",d:"Heredity + Evolution"},
-                {t:"10:00",s:"english",d:"Letter + Article writing"},
-                {t:"12:00",s:"social",d:"Minerals + Energy"},
-                {t:"14:00",s:"hindi",d:"Letter writing"},
-                {t:"16:00",s:"math",d:"Statistics"},
-                {t:"18:00",s:"revision",d:"Science diagrams"}
-            ],
-            6: [
-                {t:"06:00",s:"math",d:"Probability"},
-                {t:"08:00",s:"science",d:"Light + Reflection"},
-                {t:"10:00",s:"english",d:"Grammar revision"},
-                {t:"12:00",s:"social",d:"Power Sharing + Federalism"},
-                {t:"14:00",s:"hindi",d:"Comprehension"},
-                {t:"16:00",s:"science",d:"Human Eye"},
-                {t:"18:00",s:"math",d:"Practice test"}
-            ],
-            7: [
-                {t:"06:00",s:"math",d:"Weak topics"},
-                {t:"08:00",s:"science",d:"Electricity"},
-                {t:"10:00",s:"english",d:"Comprehension"},
-                {t:"12:00",s:"social",d:"Democracy + Diversity"},
-                {t:"14:00",s:"hindi",d:"Poetry"},
-                {t:"16:00",s:"science",d:"Magnetic Effects"},
-                {t:"18:00",s:"social",d:"Map work"}
-            ],
-            8: [
-                {t:"06:00",s:"math",d:"Previous Year Paper"},
-                {t:"10:00",s:"science",d:"Energy + Environment"},
-                {t:"12:00",s:"social",d:"Political Parties"},
-                {t:"14:00",s:"english",d:"Previous Year Paper"},
-                {t:"16:00",s:"science",d:"Chapter revision"},
-                {t:"18:00",s:"hindi",d:"Previous year Qs"}
-            ],
-            9: [
-                {t:"06:00",s:"social",d:"Economics all chapters"},
-                {t:"08:00",s:"science",d:"Previous Year Paper"},
-                {t:"11:00",s:"english",d:"Literature revision"},
-                {t:"13:00",s:"math",d:"Error analysis"},
-                {t:"15:00",s:"social",d:"Previous Year Paper"},
-                {t:"17:00",s:"hindi",d:"Full revision"},
-                {t:"19:00",s:"revision",d:"Formulas + facts"}
-            ],
-            10: [
-                {t:"06:00",s:"math",d:"All formulas"},
-                {t:"07:30",s:"science",d:"All equations"},
-                {t:"09:00",s:"english",d:"Chapter summaries"},
-                {t:"10:30",s:"social",d:"Dates + maps"},
-                {t:"12:00",s:"hindi",d:"Grammar rules"},
-                {t:"14:00",s:"revision",d:"Mock Test"},
-                {t:"16:30",s:"revision",d:"Weak topics"},
-                {t:"18:30",s:"revision",d:"Light revision"}
-            ]
-        };
-
-        const emoji = {math:"📐",science:"🔬",english:"📖",social:"🌍",hindi:"✍️",revision:"♻️"};
-        let day = 1;
-        let notifs = false;
-
-        function enableNotifs() {
-            if (!('Notification' in window)) {
-                alert('Notifications not supported');
-                show();
-                return;
-            }
-            Notification.requestPermission().then(p => {
-                if (p === 'granted') {
-                    notifs = true;
-                    alert('Notifications enabled!');
-                }
-                show();
-            });
-        }
-
-        function skip() {
-            show();
-        }
-
-        function show() {
-            document.getElementById('notifCard').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            makeDays();
-            load(1);
-            setInterval(update, 30000);
-        }
-
-        function makeDays() {
-            const c = document.getElementById('days');
-            for (let i = 1; i <= 10; i++) {
-                const b = document.createElement('button');
-                b.className = 'day-btn';
-                b.textContent = 'Day ' + i;
-                b.onclick = () => {
-                    day = i;
-                    load(i);
-                    document.querySelectorAll('.day-btn').forEach((x,j) => {
-                        x.classList.toggle('active', j === i-1);
-                    });
-                };
-                c.appendChild(b);
-            }
-            c.children[0].classList.add('active');
-        }
-
-        function load(d) {
-            const now = new Date();
-            const m = now.getHours() * 60 + now.getMinutes();
-            const sessions = data[d];
-            const c = document.getElementById('schedule');
-            c.innerHTML = '';
-            
-            let done = 0, todo = 0;
-            
-            sessions.forEach(s => {
-                const [h, min] = s.t.split(':').map(Number);
-                const sm = h * 60 + min;
-                const status = sm < m ? 'completed' : (sm <= m + 90 ? 'current' : '');
-                if (sm < m) done++; else todo++;
-                
-                const div = document.createElement('div');
-                div.className = 'session ' + status;
-                div.innerHTML = `
-                    <div class="time">${emoji[s.s]} ${s.t}</div>
-                    <div class="subject ${s.s}">${s.s.toUpperCase()}</div>
-                    <div class="task">${s.d}</div>
-                `;
-                c.appendChild(div);
-            });
-            
-            document.getElementById('day').textContent = d;
-            document.getElementById('done').textContent = done;
-            document.getElementById('todo').textContent = todo;
-            
-            if (notifs) schedNotifs(d);
-        }
-
-        function update() {
-            load(day);
-            const now = new Date();
-            const m = now.getHours() * 60 + now.getMinutes();
-            const sessions = data[day];
-            let next = null;
-            
-            for (let s of sessions) {
-                const [h, min] = s.t.split(':').map(Number);
-                const sm = h * 60 + min;
-                if (sm > m) {
-                    next = sm - m;
-                    break;
-                }
-            }
-            
-            const el = document.getElementById('next');
-            if (next) {
-                const h = Math.floor(next / 60);
-                const min = next % 60;
-                el.textContent = (h < 10 ? '0' : '') + h + ':' + (min < 10 ? '0' : '') + min;
-            } else {
-                el.textContent = 'Done';
-            }
-        }
-
-        function schedNotifs(d) {
-            const now = new Date();
-            const sessions = data[d];
-            
-            sessions.forEach(s => {
-                const [h, m] = s.t.split(':').map(Number);
-                const t = new Date();
-                t.setHours(h, m - 5, 0, 0);
-                const diff = t - now;
-                
-                if (diff > 0 && diff < 86400000) {
-                    setTimeout(() => {
-                        if (Notification.permission === 'granted') {
-                            new Notification(
-                                emoji[s.s] + ' ' + s.s.toUpperCase() + ' in 5 min!',
-                                {body: s.d}
-                            );
-                        }
-                    }, diff);
-                }
-            });
-        }
-
-        // Auto start if already permitted
-        if (Notification.permission === 'granted') {
-            notifs = true;
-            show();
-        }
-    </script>
-</body>
-</html>
+                {t:"08:00",s:"science",d:"Chemical Reactions + Acid
